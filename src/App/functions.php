@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-function dd(mixed $value)
+function dd(mixed $value, string $source = '')
 {
   echo '<pre>';
   var_dump($value);
   echo '</pre>';
+  echo '<br>';
+  echo $source;
   die();
 }
 
