@@ -23,7 +23,7 @@ class ValidatorService
       'email' => ['required'],
       'age' => ['required'],
       'country' => ['required'],
-      'socialMediaUrl' => ['required'],
+      'socialMediaURL' => ['required'],
       'password' => ['required'],
       'confirmPassword' => ['required'],
       'tos' => ['required']

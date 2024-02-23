@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Framework;
 
-use Framework\Exceptions\ContainerException;
 use ReflectionClass, ReflectionNamedType;
+use Framework\Exceptions\ContainerException;
 
 class Container
 {
@@ -19,45 +19,48 @@ class Container
 
   public function resolve(string $className)
   {
-    $reflection = new ReflectionClass($className);
+    $reflectionClass = new ReflectionClass($className);
 
-    if (!$reflection->isInstantiable()) {
+    if (!$reflectionClass->isInstantiable()) {
       throw new ContainerException("Class {$className} is not instantiable");
     }
 
-    $constructor = $reflection->getConstructor();
+    $constructor = $reflectionClass->getConstructor();
 
     if (!$constructor) {
-      return new $className();
+      return new $className;
     }
 
     $params = $constructor->getParameters();
 
     if (count($params) === 0) {
-      return new $className();
+      return new $className;
     }
 
     $dependencies = [];
+
     foreach ($params as $param) {
       $name = $param->getName();
       $type = $param->getType();
+
       if (!$type) {
-        throw new ContainerException("Failed to resolve class {$className}, parameter {$name} is missing a type");
+        throw new ContainerException("Failed to resolve class {$className} because param {$name} is missing a type hint.");
       }
+
       if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
-        throw new ContainerException("Failed to resolve class {$className}, invalid param name");
+        throw new ContainerException("Failed to resolve class {$className} because invalid param name.");
       }
 
       $dependencies[] = $this->get($type->getName());
     }
 
-    return $reflection->newInstanceArgs($dependencies);
+    return $reflectionClass->newInstanceArgs($dependencies);
   }
 
   public function get(string $id)
   {
     if (!array_key_exists($id, $this->definitions)) {
-      throw new ContainerException("Class {$id} is not exist in container");
+      throw new ContainerException("Class {$id} does not exist in container.");
     }
 
     if (array_key_exists($id, $this->resolved)) {
