@@ -14,4 +14,10 @@ $db = new Database(
   ''
 );
 
-echo "Connected to database";
+$search = "Shirts";
+$query = "SELECT * FROM products WHERE name=:name";
+$stmt = $db->connection->prepare($query);
+$stmt->bindParam('name', $search, PDO::PARAM_STR);
+$stmt->execute();
+
+var_dump($stmt->fetchAll(PDO::FETCH_OBJ));
