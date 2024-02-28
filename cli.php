@@ -1,15 +1,17 @@
 <?php
+include __DIR__ . '/src/Framework/Database.php';
 
-$driver = 'mysql';
-$config = http_build_query(data: [
-  'host' => '127.0.0.1',
-  'port' => '3308',
-  'dbname' => 'phpiggy'
-], arg_separator: ';');
+use Framework\Database;
 
-$dsn = "{$driver}:{$config}";
-$username = 'root';
-$password = '';
+$db = new Database(
+  'mysql',
+  [
+    'host' => '127.0.0.1',
+    'port' => '3308',
+    'dbname' => 'phpiggy'
+  ],
+  'root',
+  ''
+);
 
-$db = new PDO($dsn, $username, $password);
 echo "Connected to database";
