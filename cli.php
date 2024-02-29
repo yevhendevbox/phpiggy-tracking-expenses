@@ -14,24 +14,27 @@ $db = new Database(
   ''
 );
 
-try {
-  $db->connection->beginTransaction();
-  $db->connection->query("INSERT INTO products VALUES(99, 'Gloves')");
+$sqlFile = file_get_contents('./database.sql');
 
-  $search = "Gloves";
-  $query = "SELECT * FROM products WHERE name=:name";
-  $stmt = $db->connection->prepare($query);
+$db->query($sqlFile);
+// try {
+//   $db->connection->beginTransaction();
+//   $db->connection->query("INSERT INTO products VALUES(99, 'Gloves')");
 
-  $stmt->bindParam('name', $search, PDO::PARAM_STR);
-  $stmt->execute();
+//   $search = "Gloves";
+//   $query = "SELECT * FROM products WHERE name=:name";
+//   $stmt = $db->connection->prepare($query);
 
-  var_dump($stmt->fetchAll(PDO::FETCH_OBJ));
+//   $stmt->bindParam('name', $search, PDO::PARAM_STR);
+//   $stmt->execute();
 
-  $db->connection->commit();
-} catch (Exception $error) {
-  if ($db->connection->inTransaction()) {
-    $db->connection->rollBack();
-  }
+//   var_dump($stmt->fetchAll(PDO::FETCH_OBJ));
 
-  echo "Transaction failed";
-}
+//   $db->connection->commit();
+// } catch (Exception $error) {
+//   if ($db->connection->inTransaction()) {
+//     $db->connection->rollBack();
+//   }
+
+//   echo "Transaction failed";
+// }
