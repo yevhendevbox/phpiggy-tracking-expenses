@@ -32,4 +32,15 @@ class AuthController
 
     redirectTo('/');
   }
+  public function loginView()
+  {
+    echo $this->view->render('/login.php', [
+      'title' => 'Login | Expense Tracking App',
+    ]);
+  }
+
+  public function login()
+  {
+    $this->validatorService->validateLogin($_POST);
+  }
 }
