@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Config;
 
-use App\Controllers\{HomeController, AboutController, AuthController};
 use Framework\App;
+use App\Controllers\{
+  HomeController,
+  AboutController,
+  AuthController
+};
 use App\Middleware\{AuthRequiredMiddleware, GuestOnlyMiddleware};
 
 function registerRoutes(App $app)

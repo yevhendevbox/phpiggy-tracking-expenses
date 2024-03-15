@@ -17,7 +17,7 @@ class Router
       'path' => $path,
       'method' => strtoupper($method),
       'controller' => $controller,
-      'middlewares' => [],
+      'middlewares' => []
     ];
   }
 
@@ -50,6 +50,7 @@ class Router
         new $class;
 
       $action = fn () => $controllerInstance->{$function}();
+
       $allMiddleware = [...$route['middlewares'], ...$this->middlewares];
 
       foreach ($allMiddleware as $middleware) {
@@ -69,6 +70,7 @@ class Router
   {
     $this->middlewares[] = $middleware;
   }
+
   public function addRouteMiddleware(string $middleware)
   {
     $lastRouteKey = array_key_last($this->routes);
