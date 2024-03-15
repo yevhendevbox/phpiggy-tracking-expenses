@@ -10,6 +10,7 @@ class Database
 {
   private PDO $connection;
   private PDOStatement $stmt;
+
   public function __construct(
     string $driver,
     array $config,
@@ -21,7 +22,7 @@ class Database
     $dsn = "{$driver}:{$config}";
 
     try {
-      $this->connection =  new PDO($dsn, $username, $password, [
+      $this->connection = new PDO($dsn, $username, $password, [
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
       ]);
     } catch (PDOException $e) {
@@ -32,6 +33,7 @@ class Database
   public function query(string $query, array $params = []): Database
   {
     $this->stmt = $this->connection->prepare($query);
+
     $this->stmt->execute($params);
 
     return $this;
@@ -45,5 +47,10 @@ class Database
   public function find()
   {
     return $this->stmt->fetch();
+  }
+
+  public function id()
+  {
+    return $this->connection->lastInsertId();
   }
 }
