@@ -8,7 +8,6 @@ use Framework\Database;
 
 class TransactionService
 {
-
   public function __construct(private Database $db)
   {
   }
@@ -32,25 +31,25 @@ class TransactionService
   public function getUserTransactions(int $length, int $offset)
   {
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
-    $params =       [
+    $params = [
       'user_id' => $_SESSION['user'],
       'description' => "%{$searchTerm}%"
     ];
 
     $transactions = $this->db->query(
-      "SELECT *, DATE_FORMAT(date, '%Y-%m-%d') AS formatted_date
-      FROM transactions WHERE user_id = :user_id
+      "SELECT *, DATE_FORMAT(date, '%Y-%m-%d') as formatted_date
+      FROM transactions
+      WHERE user_id = :user_id
       AND description LIKE :description
-      LIMIT {$length} OFFSET {$offset}
-      ",
+      LIMIT {$length} OFFSET {$offset}",
       $params
     )->findAll();
 
     $transactionCount = $this->db->query(
       "SELECT COUNT(*)
-      FROM transactions WHERE user_id = :user_id
-      AND description LIKE :description
-      ",
+      FROM transactions
+      WHERE user_id = :user_id
+      AND description LIKE :description",
       $params
     )->count();
 
@@ -60,8 +59,9 @@ class TransactionService
   public function getUserTransaction(string $id)
   {
     return $this->db->query(
-      "SELECT *, DATE_FORMAT(date, '%Y-%m-%d') AS formatted_date
-      FROM transactions WHERE id = :id AND user_id = :user_id",
+      "SELECT *, DATE_FORMAT(date, '%Y-%m-%d') as formatted_date
+      FROM transactions
+      WHERE id = :id AND user_id = :user_id",
       [
         'id' => $id,
         'user_id' => $_SESSION['user']
@@ -75,12 +75,26 @@ class TransactionService
 
     $this->db->query(
       "UPDATE transactions
-      SET description = :description, amount = :amount, date = :date
-      WHERE id = :id AND user_id = :user_id",
+      SET description = :description,
+        amount = :amount,
+        date = :date
+      WHERE id = :id
+      AND user_id = :user_id",
       [
         'description' => $formData['description'],
         'amount' => $formData['amount'],
         'date' => $formattedDate,
+        'id' => $id,
+        'user_id' => $_SESSION['user']
+      ]
+    );
+  }
+
+  public function delete(int $id)
+  {
+    $this->db->query(
+      "DELETE FROM transactions WHERE id = :id AND user_id = :user_id",
+      [
         'id' => $id,
         'user_id' => $_SESSION['user']
       ]
